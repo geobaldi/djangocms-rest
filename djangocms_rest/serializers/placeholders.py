@@ -86,7 +86,12 @@ class PlaceholderSerializer(serializers.Serializer):
                 ],
             ),
         )
-        get_params = {key: self.request.GET[key] for key in ("html", "preview") if key in self.request.GET}
+        request = self.context.get('request', None)
+        get_params = (
+            {key: request.GET[key] for key in ("html", "preview") if key in request.GET}
+            if request
+            else None
+        )
         if get_params:
             url += "?" + urlencode(get_params)
         return url
